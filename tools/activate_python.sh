@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-echo "Warning! You haven't set Python environment yet. Go to espnet/tools and generate 'activate_python.sh' using setup_anaconda.sh or setup_python.sh" >&2
+if [ -z "${PS1:-}" ]; then PS1=__dummy__; fi
+. /lnet/spec/work/people/oplatek/espnet/tools/anaconda/etc/profile.d/conda.sh && conda deactivate && conda activate 3.8
