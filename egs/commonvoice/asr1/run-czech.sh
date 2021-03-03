@@ -22,9 +22,12 @@ do_delta=false
 
 # preprocess_config=conf/no_preprocess.yaml
 preprocess_config=conf/specaug.yaml
-train_config=conf/train.yaml
-lm_config=conf/lm.yaml
-decode_config=conf/decode.yaml
+# train_config=conf/train.yaml
+train_config="./conf/tuning/transducer/cs_train_conformer-rnn_transducer.yaml"
+lm_config="conf/lm.yaml"
+# lm_config="exp/train_cs_rnnlm_pytorch_lm_unigram150/model.json"
+# decode_config="conf/decode.yaml"
+decode_config="./conf/tuning/transducer/decode_default.yaml"
 
 # rnnlm related
 lm_resume=        # specify a snapshot file to resume LM training
@@ -34,7 +37,8 @@ lmtag=            # tag for managing LMs
 recog_model=model.acc.best # set a model to be used for decoding: 'model.acc.best' or 'model.loss.best'
 n_average=10
 
-lang=en # en de fr cy tt kab ca zh-TW it fa eu es ru tr nl eo zh-CN rw pt zh-HK cs pl uk 
+# lang=en # en de fr cy tt kab ca zh-TW it fa eu es ru tr nl eo zh-CN rw pt zh-HK cs pl uk 
+lang=cs # en de fr cy tt kab ca zh-TW it fa eu es ru tr nl eo zh-CN rw pt zh-HK cs pl uk 
 
 # bpemode (unigram or bpe)
 if [[ "zh" == *"${lang}"* ]]; then
@@ -48,6 +52,8 @@ bpemode=unigram
 tag="" # tag for managing experiments.
 
 . utils/parse_options.sh || exit 1;
+
+if [[ $debugmode -eq 0 ]] ; then set -x ; fi
 
 # Set bash to 'debug' mode, it will exit on :
 # -e 'error', -u 'undefined variable', -o ... 'error in pipeline', -x 'print commands',
@@ -91,6 +97,8 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
     utils/filter_scp.pl --exclude data/${train_dev}/wav.scp data/${train_set}/wav.scp > data/${train_set}/temp_wav.scp
     utils/filter_scp.pl --exclude data/${test_set}/wav.scp data/${train_set}/temp_wav.scp > data/${train_set}/wav.scp
     utils/fix_data_dir.sh data/${train_set}
+
+    utils/data/get_utt2dur.sh --cmd "$train_cmd" --nj 20 --read-entire-file true data/${train_set}
 
     utils/perturb_data_dir_speed.sh 0.9 data/${train_set} data/temp1
     utils/perturb_data_dir_speed.sh 1.0 data/${train_set} data/temp2
