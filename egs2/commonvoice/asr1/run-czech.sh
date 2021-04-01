@@ -27,7 +27,8 @@ else
 fi
 
 ./asr.sh \
-    --ngpu 4 \
+    --nj 16 \
+    --ngpu 3 \
     --lang "${lang}" \
     --local_data_opts "--lang ${lang}" \
     --use_lm true \

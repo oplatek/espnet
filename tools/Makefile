@@ -4,7 +4,7 @@ CHAINER_VERSION := 6.0.0
 # Disable cupy installation
 NO_CUPY :=
 # PyTorch version: 0.4.1, 1.0.0, 1.0.1, 1.1.0, 1.2.0, 1.3.0, 1.3.1, 1.4.0, 1.5.0, 1.5.1, 1.6.0, 1.7.0, 1.7.1
-TH_VERSION := 1.4.0
+TH_VERSION := 1.7.1
 WGET := wget --tries=3
 
 # Use pip for pytorch installation even if you have anaconda
@@ -27,7 +27,8 @@ endif
 
 ifeq ($(strip $(CPU_ONLY)),)
 # Derive CUDA version from nvcc
-CUDA_VERSION = $(shell nvcc --version | grep "Cuda compilation tools" | cut -d" " -f5 | sed s/,//)
+# CUDA_VERSION = $(shell nvcc --version | grep "Cuda compilation tools" | cut -d" " -f5 | sed s/,//)
+CUDA_VERSION = 11.0
 CUDA_VERSION_WITHOUT_DOT = $(strip $(subst .,,$(CUDA_VERSION)))
 PIP_PYTORCH := torch==$(TH_VERSION) -f https://download.pytorch.org/whl/cu$(CUDA_VERSION_WITHOUT_DOT)/torch_stable.html
 ifeq ($(strip $(CUDA_VERSION_WITHOUT_DOT)),80)

@@ -46,6 +46,7 @@ align_config=
 api=v1
 dict=
 
+set -x
 if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
     echo "stage -1: Data and Model Download"
     local/download_data.sh
