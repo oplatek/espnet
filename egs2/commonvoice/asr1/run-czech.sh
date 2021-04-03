@@ -12,7 +12,8 @@ train_set=train_"$(echo "${lang}" | tr - _)"
 train_dev=dev_"$(echo "${lang}" | tr - _)"
 test_set="${train_dev} test_$(echo ${lang} | tr - _)"
 
-asr_config="conf/tuning/train_asr_conformer5.yaml"
+# asr_config="conf/tuning/train_asr_conformer5.yaml"
+asr_config="conf/tuning/train_asr_rnn_cz.yaml"
 lm_config="conf/train_lm.yaml"
 inference_config="conf/decode_asr.yaml"
 
@@ -27,11 +28,12 @@ else
 fi
 
 ./asr.sh \
+    --stage 9 \
     --nj 16 \
-    --ngpu 3 \
+    --ngpu 1 \
     --lang "${lang}" \
     --local_data_opts "--lang ${lang}" \
-    --use_lm true \
+    --use_lm false \
     --lm_config "${lm_config}" \
     --token_type bpe \
     --nbpe $nbpe \
